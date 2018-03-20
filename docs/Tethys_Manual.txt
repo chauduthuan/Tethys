@@ -1,0 +1,28 @@
+Starting server
+	c:\Program Files (x86)\Tethys\server> dbXMLserver.py --help
+	By default, Tethys uses port 9779
+
+Shutdown server = Ctl + Break
+
+Running the server as a service
+
+Data organization in Tethys
+	Deployment, Detections, Localizations, and Ensemble
+
+Importing Data to Tethys
+	Tethys/client-python/import.py --file C:/Users/Eloise/SOCAL33M-BeakedWhales.xlsx --server tethys.your.org --sourcemap SIO.SWAL.Detections.Analyst.v1 Detections
+
+Updating existing documents
+	update_documents.py SourceMaps
+	update_documents.py --update=true all
+
+Removing data from Tethys
+	clear_documents.py 
+	**clear first, then import**
+	clear_documents.py Deployments
+	followed by an import of the Deployments:
+	import.py --file HarpDB --sourcemap SIO.SWAL.Deployments.v1 --server tethys.my.org --connectionstring "Server=harp.my.org;Port=3306;User=harp-user;Password=*" Deployments
+
+------------XQuery------------
+
+

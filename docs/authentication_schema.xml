@@ -1,0 +1,98 @@
+<!-- ************************************************************* -->
+<!--Users Containner -->
+<!--User.xml -->
+<!--admin1.xml -->
+<User username="admin1">
+	<password>asdf1</password>
+	<groups>
+		<group>Admin</group>
+	</groups>
+</User>
+<!--user1.xml -->
+<User username="user1">
+	<password>1111</password>
+	<groups>
+		<group>Researcher</group>
+	</groups>
+</User>
+<!--user2.xml -->
+<User username="user2">
+	<password>2222</password>
+	<groups>
+		<group>Student</group>
+	</groups>
+</User>
+<!--user3.xml -->
+<User username="user3">
+	<password>3333</password>
+	<groups>
+		<group>Public</group>
+	</groups>
+</User>
+<!-- ************************************************************* -->
+<!--Permissions Containner-->
+<!-- each document has its own xml file for privileges -->
+
+<!-- for Users -->
+<!-- 
+<Permission name="Users/user1.xml">
+	<owner name="admin" read="true" modify="true" delete="true"/>
+</Permission>
+
+<Permission name="Users/user2.xml">
+	<owner name="admin" read="true" modify="true" delete="true"/>
+</Permission> 
+-->
+
+<!--For any other Document -->
+<!--Detection_detection1.xml-->
+<Permission name="Detection_detection1.xml">
+	<owner username="user1">
+		<read>true</read>
+		<modify>true</modify>
+	</owner>
+	<groups>
+		<group name="Public">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+		<group name="Student">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+		<group name="Researcher">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+	</groups>
+</Permission>
+
+<!-- </Permission name="Detection_detection1.xml">
+	<owner name="user1" read="true" modify="true"/>
+	<group name="Admin" read="true" modify="true"/>
+	<group name="Public" read="true" modify="true"/>
+	<group name="Researcher" read="true" modify="false"/>
+</Permission>
+ -->
+ 
+<!--Deployment_deployment1.xml -->
+<Permission name="Deployment_deployment1.xml">
+	<owner username="user2">
+		<read>true</read>
+		<modify>true</modify>
+	</owner>
+	<groups>
+		<group name="Public">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+		<group name="Student">
+			<read>false</read>
+			<modify>false</modify>
+		</group>
+		<group name="Researcher">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+	</groups>
+</Permission>

@@ -1,0 +1,54 @@
+Start dbxml:
+	cd to .../bin
+	>dbxml
+
+Container: containers hold collections of XML documents	
+	dbxml> createContainer phone.dbxml
+	dbxml> openContainer components.dbxml
+
+Add data to container: (folder or collection)
+	dbxml> putDocument phone1 'some xml string' s
+
+	Note: The XML document content is wrapped in single quote characters and the command is terminated by an s character.
+
+Make query:
+	dbxml> query 'collection("phone.dbxml")/phonebook/name/last/string()'
+	dbxml> print
+
+Help option:
+	dbxml> help
+	dbxml> help createContainer
+
+
+Adding Data:
+	dbxml> createContainer parts.dbxml
+	dbxml> setAutoIndexing off
+	dbxml> putDocument "" 'some XQuery' q
+
+Add index: bla bla bla
+
+Working with Data from a Specific Document:
+	dbxml> query 'doc("components.dbxml/component1")/component/@number'
+
+Using Metadata:
+	dbxml> openContainer components.dbxml
+	dbxml> setMetaData component1 '' modifyuser string john
+	dbxml> query 'collection("components.dbxml")/component[dbxml:metadata("modifyuser")="john"]'
+
+Modifying Documents:
+	dbxml> query 'insert nodes <bla>bla</bla> after doc("dbxml:/abc.dbxml/blabla")/bla/bla
+	insert/delete/rename
+
+	dbxml> query 'replace node
+	dbxml> query 'replace value of node
+	dbxml> query 'for $i in doc("dbxml:/modify.dbxml/mod1.xml")/mod1/nodeB return replace value of node $i with "replacement text"'
+
+Schema Constraints:
+First, a schema is required
+Second, we need to create a container with validation enabled
+	dbxml> createContainer validate.dbxml d validate
+Third, we need to attach the schema to a document and insert it into the container
+	dbxml> putDocument phone1 '
+	<phonebook xmlns:xsi="http://www.w3.org2/001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.oracle.com/fakeschema.xsd">
+	<bla>bla</bla>' s

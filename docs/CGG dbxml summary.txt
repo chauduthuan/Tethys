@@ -1,0 +1,121 @@
+---------Basic C++ API for dbxml---------
+XmlManager
+	***Note***
+	basic logic for create, open
+		ContainerConfig config
+		Manager impl_ 
+		return impl_->openContainer(name, 0 , config)
+
+	createContainer
+
+	openContainer
+	
+	removeContainer	
+		Container::removeContainer
+	createDocument
+		impl_->createDocument();
+
+	query
+
+
+	create*Stream* : create input stream to be added in container
+
+	createUpdateContext
+
+
+XmlContainer
+	putDocument : add Document to Container
+		void XmlContainer::putDocument
+		modify something here
+
+	getDocument
+
+	deleteDocument
+
+
+
+XmlDocument
+	setContent
+	setContentAsXmlInputStream
+	
+
+XmlQueryContext
+
+XmlQueryExpression
+	execute
+
+XmlUpdateContext
+
+XQuery
+	insert
+	delete
+	replace
+	rename
+
+----------------------------------------------------------------
+---------Where should I inject permission checking code---------
+Manager
+	Manager::openContainer
+
+	Manager::createDocument
+
+	Manager::createLocalFileInputStream and so on
+
+
+Container
+	Container::addDocument
+		check if user can add document
+
+	Container::getDocument
+		check if user can read document, handle special case for admin/user file 
+int Container::getDocument(OperationContext &context,
+			   const std::string &name,
+			   XmlDocument &document, u_int32_t flags) const
+{
+	DocID id;
+	int err = getDocumentID(context, name, id);
+	if(err != 0) return err;
+	//INJECT CHECKING PERMISSION HERE
+	err = getDocument(context, id, document, flags);
+	if (err == 0)
+		((Document&)document).setName(name, /*modified*/false);
+
+	return err;
+}
+int Container::getDocument(OperationContext &context, const DocID &did,
+			   XmlDocument &document, u_int32_t flags) const
+{
+	// Count getDocument here
+	INCR(Counters::num_getdoc);
+
+	document = const_cast<Manager&>(mgr_).createDocument();
+	bool wfonly = false;
+	if ((flags & DBXML_WELL_FORMED_ONLY) != 0) {
+		wfonly = true;
+		flags &= ~DBXML_WELL_FORMED_ONLY;
+	}
+	((Document*)document)->setMetaDataFromContainer((Container *)this, did, context.txn(), flags);
+	if (wfonly)
+		((Document*)document)->setValidation(Document::WF_ONLY);
+	return 0;
+}
+
+
+Document
+	Document::getDocumentURI
+	Document::setContainer
+
+ContainerConfig used for openContainer
+	add things to config file such as username and password
+
+OperationContext used for getDocument
+	add things to config file such as username and password
+
+QueryExpression
+	QueryExpression::execute
+
+---------------------------------------------------------------------
+---------Where should I inject user code---------
+XmlManager
+Manager
+
