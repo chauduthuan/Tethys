@@ -1,0 +1,2 @@
+del Users
+del Permissions

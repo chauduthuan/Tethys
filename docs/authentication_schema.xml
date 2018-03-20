@@ -12,6 +12,7 @@
 <User username="user1">
 	<password>1111</password>
 	<groups>
+		<group>Student</group>
 		<group>Researcher</group>
 	</groups>
 </User>
@@ -34,14 +35,14 @@
 <!-- each document has its own xml file for privileges -->
 
 <!-- for Users -->
-<!-- 
+<!--
 <Permission name="Users/user1.xml">
 	<owner name="admin" read="true" modify="true" delete="true"/>
 </Permission>
 
 <Permission name="Users/user2.xml">
 	<owner name="admin" read="true" modify="true" delete="true"/>
-</Permission> 
+</Permission>
 -->
 
 <!--For any other Document -->
@@ -74,7 +75,7 @@
 	<group name="Researcher" read="true" modify="false"/>
 </Permission>
  -->
- 
+
 <!--Deployment_deployment1.xml -->
 <Permission name="Deployment_deployment1.xml">
 	<owner username="user2">

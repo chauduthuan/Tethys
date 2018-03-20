@@ -1,0 +1,49 @@
+createContainer Users
+
+openContainer Users
+
+putDocument user1 '<User username="user1">
+	<password>1111</password>
+	<groups>
+    <group>Student</group>
+		<group>Researcher</group>
+	</groups>
+</User>' s
+
+putDocument user2 '<User username="user2">
+	<password>2222</password>
+	<groups>
+		<group>Student</group>
+	</groups>
+</User>' s
+
+putDocument user3 '<User username="user3">
+	<password>3333</password>
+	<groups>
+		<group>Public</group>
+	</groups>
+</User>' s
+
+
+createContainer Permissions
+
+
+query 'collection("Users")/User'
+print
+
+query 'for $i in collection("Users")/User[@username="user1"]
+return $i/password/string()'
+
+query 'for $i in collection("Users")/User[@username="user1"]/groups/group
+return $i/string()'
+
+
+  for $g in $i/groups/
+    return $g/group/string()'
+
+query 'for $i in collection("Users")/User[@username="user1"]
+  return
+    $i/password/string()
+    for $g in $i/groups/
+      print $g/group/string()
+'
