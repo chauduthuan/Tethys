@@ -3,6 +3,7 @@
 
 User::User()
 {
+	this->isValid = false;
 };
 
 User::User(std::string username, std::string password)
@@ -20,28 +21,67 @@ void User::validateUser()
 		XmlManager xmlManager;
 		XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
 		XmlDocument userXmlDocument = usersXmlContainer.getDocument(this->username);
-		//userXmlDocument.getContent(this->userXmlContent);
+		userXmlDocument.getContent(this->userXmlContent);
+
 		/*
 		querry password , assign to correctPassword, compare password and assign isValid
 		query groups, assign groups
 		*/
+		this->correctPassword = this->queryPassword();
+		if (this->password == this->correctPassword) 
+		{
+			this->isValid = true;
+			cout << "User valid" <<endl;
+		}
+		this->groups = this->queryGroups();
+
 	} 
 	catch (XmlException &xe) //document not found => user not exist
 	{
 		this->userXmlContent = "";
-		
-
+		cout<<"Error"<<endl;
 	}
 };
 
 string User::queryPassword()
 {
-	string password;
-	return password;
+	string pw = "";
+	XmlManager xmlManager;
+	XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+
+	XmlQueryContext context = xmlManager.createQueryContext();
+	string query ="collection('../../Tethys/metadata/Users')/User[@username=$username]/password/string()";
+	context.setVariableValue("username", this->username);
+	XmlQueryExpression qe = xmlManager.prepare(query, context);
+	XmlResults results = qe.execute(context,0);
+	cout << "Found " << results.size() << " documents for query: '"<< query << "'" << endl;
+	XmlValue value;
+	while (results.next(value))
+	{
+		pw = value.asString();
+		cout<<"correct password = " << pw << endl;
+	}
+	return pw;
 }
+
 vector<string> User::queryGroups()
 {
 	vector<string> groups;
+	XmlManager xmlManager;
+	XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+
+	XmlQueryContext context = xmlManager.createQueryContext();
+	string query ="collection('../../Tethys/metadata/Users')/User[@username=$username]/groups/group/string()";
+	context.setVariableValue("username", this->username);
+	XmlQueryExpression qe = xmlManager.prepare(query, context);
+	XmlResults results = qe.execute(context,0);
+	cout << "Found " << results.size() << " documents for query: '"<< query << "'" << endl;
+	XmlValue value;
+	while (results.next(value))
+	{
+		groups.push_back(value.asString());
+		cout<<"group =  " << value.asString() << endl;
+	}
 	return groups;
 }
 
@@ -96,7 +136,7 @@ string User::getUserXmlContent()
 };
 string User::getUsersContainerName()
 {
-	string s(DBXML_DIR);
+	string s(METADATA_PATH);
 	s += USERS_CONTAINER_NAME;
 	return s;
 }

@@ -4,7 +4,9 @@
 
 #include "dbxml/DbXml.hpp"
 
-#define DBXML_DIR "C:/Users/thuanPC/Desktop/Tethys/metadata/"
+//#define DBXML_DIR "C:/Users/thuanPC/Desktop/Tethys/metadata/"
+#define METADATA_PATH "../../Tethys/metadata/"
+
 #define USERS_CONTAINER_NAME "Users"
 #define ADMINS_CONTAINER_NAME "Admins"
 #define PERMISSIONS_CONTAINER_NAME "Permissions"
@@ -56,7 +58,12 @@ private:
 	string queryPassword();
 	vector<string> queryGroups();
 	
+	/*XmlManager xmlManager;
+	XmlContainer usersXmlContainer;
+	XmlDocument userXmlDocument;*/
+
 	string userXmlContent;
+
 };
 
 #endif

@@ -31,8 +31,8 @@ createContainer Permissions
 query 'collection("Users")/User'
 print
 
-query 'for $i in collection("Users")/User[@username="user1"]
-return $i/password/string()'
+query 'for $i in collection("Users")/User[@username="user1"]/password
+return $i/string()'
 
 query 'for $i in collection("Users")/User[@username="user1"]/groups/group
 return $i/string()'
