@@ -1,23 +1,25 @@
 createContainer Users
-
 openContainer Users
 
-putDocument user1 '<User username="user1">
+putDocument user1 '
+<User username="user1">
 	<password>1111</password>
 	<groups>
-    <group>Student</group>
+		<group>Student</group>
 		<group>Researcher</group>
 	</groups>
 </User>' s
 
-putDocument user2 '<User username="user2">
+putDocument user2 '
+<User username="user2">
 	<password>2222</password>
 	<groups>
 		<group>Student</group>
 	</groups>
 </User>' s
 
-putDocument user3 '<User username="user3">
+putDocument user3 '
+<User username="user3">
 	<password>3333</password>
 	<groups>
 		<group>Public</group>
@@ -26,24 +28,48 @@ putDocument user3 '<User username="user3">
 
 
 createContainer Permissions
+openContainer Permissions
 
+putDocument Detections_detection1 '
+<Permission name="Detections_detection1.xml">
+	<owner username="user1">
+		<read>true</read>
+		<modify>true</modify>
+	</owner>
+	<groups>
+		<group name="Public">
+			<read>true</read>
+			<modify>false</modify>
+		</group>
+		<group name="Student">
+			<read>true</read>
+			<modify>false</modify>
+		</group>
+		<group name="Researcher">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+	</groups>
+</Permission>' s
 
-query 'collection("Users")/User'
-print
-
-query 'for $i in collection("Users")/User[@username="user1"]/password
-return $i/string()'
-
-query 'for $i in collection("Users")/User[@username="user1"]/groups/group
-return $i/string()'
-
-
-  for $g in $i/groups/
-    return $g/group/string()'
-
-query 'for $i in collection("Users")/User[@username="user1"]
-  return
-    $i/password/string()
-    for $g in $i/groups/
-      print $g/group/string()
-'
+putDocument Deployments_deployment1 '
+<Permission name="Deployments_deployment1.xml">
+	<owner username="user2">
+		<read>true</read>
+		<modify>false</modify>
+	</owner>
+	<groups>
+		<group name="Public">
+			<read>false</read>
+			<modify>false</modify>
+		</group>
+		<group name="Student">
+			<read>false</read>
+			<modify>false</modify>
+		</group>
+		<group name="Researcher">
+			<read>true</read>
+			<modify>true</modify>
+		</group>
+	</groups>
+</Permission>' s

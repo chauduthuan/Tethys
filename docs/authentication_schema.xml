@@ -46,8 +46,8 @@
 -->
 
 <!--For any other Document -->
-<!--Detection_detection1.xml-->
-<Permission name="Detection_detection1.xml">
+<!--Detections_detection1.xml-->
+<Permission name="Detections_detection1.xml">
 	<owner username="user1">
 		<read>true</read>
 		<modify>true</modify>
@@ -55,11 +55,11 @@
 	<groups>
 		<group name="Public">
 			<read>true</read>
-			<modify>true</modify>
+			<modify>false</modify>
 		</group>
 		<group name="Student">
 			<read>true</read>
-			<modify>true</modify>
+			<modify>false</modify>
 		</group>
 		<group name="Researcher">
 			<read>true</read>
@@ -76,16 +76,16 @@
 </Permission>
  -->
 
-<!--Deployment_deployment1.xml -->
-<Permission name="Deployment_deployment1.xml">
+<!--Deployments_deployment1.xml -->
+<Permission name="Deployments_deployment1.xml">
 	<owner username="user2">
 		<read>true</read>
-		<modify>true</modify>
+		<modify>false</modify>
 	</owner>
 	<groups>
 		<group name="Public">
-			<read>true</read>
-			<modify>true</modify>
+			<read>false</read>
+			<modify>false</modify>
 		</group>
 		<group name="Student">
 			<read>false</read>

@@ -1,0 +1,46 @@
+query 'collection("Users")/User'
+print
+
+setVariable username 'user1'
+<!--Get password -->
+query 'collection("Users")/User[@username=$username]/password/string()'
+print
+<!--Get groups -->
+query 'collection("Users")/User[@username=$username]/groups/group/string()'
+
+
+setVariable permission_doc "Detections_detection1.xml"
+getDocument Detections_detection1
+<!--get owner username -->
+query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/@username/string()'
+
+<!--get owner read permission -->
+query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/read/string()'
+query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/modify/string()'
+print
+
+<!--get group read permission -->
+query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name="Public"]/read/string()'
+
+
+query 'for $d in collection("Permissions")
+return $d/Permission/owner/string()'
+
+
+
+query 'for $i in collection("Users")/User[@username="user1"]/password
+return $i/string()'
+
+query 'for $i in collection("Users")/User[@username="user1"]/groups/group
+return $i/string()'
+
+
+  for $g in $i/groups/
+    return $g/group/string()'
+
+query 'for $i in collection("Users")/User[@username="user1"]
+  return
+    $i/password/string()
+    for $g in $i/groups/
+      print $g/group/string()
+'
