@@ -73,3 +73,66 @@ putDocument Deployments_deployment1 '
 		</group>
 	</groups>
 </Permission>' s
+
+createContainer Deployments
+openContainer Deployments
+
+putDocument deployment1 '
+<Deployment name="deployment1">
+	<Project>ALEUT</Project>
+	<DeploymentID>02</DeploymentID>
+	<Site>BD</Site>
+	<Cruise>Aleut02</Cruise>
+	<Platform>mooring</Platform>
+	<Region>Bering Sea</Region>
+	<Instrument>
+		<Type>HARP</Type>
+		<ID>Aleut02-BD</ID>
+	</Instrument>
+</Deployment>' s
+
+putDocument deployment2 '
+<Deployment name="deployment2">
+	<Project>CINMS</Project>
+	<DeploymentID>04</DeploymentID>
+	<Site>C</Site>
+	<Cruise>CINMS04</Cruise>
+	<Platform>mooring</Platform>
+	<Region>North Pacific Ocean</Region>
+	<Instrument>
+		<Type>HARP</Type>
+		<ID>CINMS04-C</ID>
+	</Instrument>
+</Deployment>' s
+
+
+createContainer Detections
+openContainer Detections
+
+putDocument detection1 '
+<Detection name="detection1">
+	<DataSource>
+		<Project>SOCAL</Project>
+		<Deployment>38</Deployment>
+		<Site>M</Site>
+	</DataSource>
+	<Algorithm>
+		<Method>Energy Detector</Method>
+		<Software>finDetector</Software>
+		<Version>2.0</Version>
+	</Algorithm>
+</Detection>' s 
+
+putDocument detection2 '
+<Detection name="detection2">
+	<DataSource>
+		<Project>SOCAL</Project>
+		<Deployment>38</Deployment>
+		<Site>M</Site>
+	</DataSource>
+	<Algorithm>
+		<Method>Spectrogram Correlation</Method>
+		<Software>autodet</Software>
+		<Version>1.0</Version>
+	</Algorithm>
+</Detection>' s

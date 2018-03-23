@@ -1,6 +1,7 @@
 #include "User.hpp"
 #include "Permission.hpp"
 #include "dbxml/DbXml.hpp"
+
 #include <iostream>
 
 using namespace std;
@@ -15,6 +16,8 @@ int main(int argc, char **argv)
 	user.validateUser();*/
 	cout<< user.getUsername() <<endl;
 	cout<< "Users Container path = " << user.getUsersContainerName() <<endl;
+	string xmlString = user.getUserXmlContent();
+	cout <<xmlString<<endl;
 
 
 	//if (user.isAdmin()) cout<<"admin"<<endl;
