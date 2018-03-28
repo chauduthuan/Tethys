@@ -85,6 +85,32 @@ vector<string> User::queryGroups()
 	return groups;
 }
 
+bool User::hasPermission(string containerName, string documentName, PermissionType type)
+{
+	string permissionContainerName = this->getPermissionsContainerName();
+	string permissionDocumentName = this->getPermissionDocumentName(containerName, documentName);
+	//string permissionDocumentName = "Deployments_deployment1";
+	cout << "Permission Container Name = " << permissionContainerName<< endl;
+	cout << "Permission Document Name =  " << permissionDocumentName << endl;
+	XmlManager xmlManager;
+	XmlContainer permissionsXmlContainer = xmlManager.openContainer(permissionContainerName);
+	XmlDocument permissionXmlDocument = permissionsXmlContainer.getDocument(permissionDocumentName);
+	string content;
+	permissionXmlDocument.getContent(content);
+	cout<<"Permission content = \n" << content << endl;
+	/* for normal document, read permission document and check permission
+	if permission xml not found, return true
+	if user is admin, return true
+	if user is owner, return permission.xml/owner/read
+	iterate through each group of the user, for each group name
+		check permission.xml/groups/group[@name="group_name"]/read
+		if true, return true
+	return false
+	*/
+
+	return true;
+};
+
 bool User::isAdmin()
 {
 	return (this->username == ADMIN_USERNAME) && (this->password == ADMIN_PASSWORD);
@@ -134,9 +160,22 @@ string User::getUserXmlContent()
 {
 	return this->userXmlContent;
 };
+
 string User::getUsersContainerName()
 {
 	string s(METADATA_PATH);
 	s += USERS_CONTAINER_NAME;
 	return s;
 }
+string User::getPermissionsContainerName()
+{
+	string s(METADATA_PATH);
+	s += PERMISSIONS_CONTAINER_NAME;
+	return s;
+}
+
+string User::getPermissionDocumentName(string containerName, string documentName)
+{
+	string docName = containerName + "_" + documentName;
+	return docName;
+};

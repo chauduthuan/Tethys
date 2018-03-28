@@ -19,7 +19,7 @@ bool Permission::hasPermission(User user, std::string permissionType){
     }
 
 	/* for normal document, read permission document and check permission
-	if permission xmk not fount, return true
+	if permission xml not found, return true
 	if user is admin, return true
 	if user is owner, return permission.xml/owner/read
 	iterate through each group of the user, for each group name

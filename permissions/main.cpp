@@ -18,6 +18,23 @@ int main(int argc, char **argv)
 	cout<< "Users Container path = " << user.getUsersContainerName() <<endl;
 	string xmlString = user.getUserXmlContent();
 	cout <<xmlString<<endl;
+	
+	/*XmlManager xmlManager;
+	XmlContainer xmlContainer = xmlManager.openContainer("../../Tethys/metadata/Deployments");
+	XmlDocument xmlDocument = xmlContainer.getDocument("deployment1");
+	*/
+
+	string containerName = "Deployments";
+	string documentName = "deployment1";
+	PermissionType type = read;
+	bool permission = user.hasPermission(containerName, documentName, type);
+	if (permission==true) cout << "read = true" << endl;
+	else cout << "read = false" << endl;
+	//cout << nameof(type) << endl;
+
+	//bool permission = user.hasPermission(xmlContainer, xmlDocument, type);
+	/*cout<<content<<endl;
+	cout<<xmlDocument.getName() << endl;*/
 
 
 	//if (user.isAdmin()) cout<<"admin"<<endl;

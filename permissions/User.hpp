@@ -18,6 +18,12 @@ using namespace DbXml;
 
 #ifndef User_H
 #define User_H
+
+enum PermissionType {
+	read,
+	modify,
+};
+
 class User
 {
 public:
@@ -44,8 +50,13 @@ public:
 	bool isAdmin(); // compare with admin account
 	bool isUserValid(); //check username and password
 	
+	//bool hasPermission(XmlContainer container, XmlDocument document, PermissionType type);
+	bool hasPermission(string containerName, string documentName, PermissionType type);
 	string getUsersContainerName();
-
+	string getPermissionsContainerName();
+	string getPermissionDocumentName(string containerName, string documentName);
+	//XmlDocument getPermissionDocument(XmlContainer container, XmlDocument document);
+	
 
 private:
 	string username;

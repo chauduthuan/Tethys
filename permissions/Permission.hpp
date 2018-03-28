@@ -8,10 +8,10 @@
 
 #ifndef Permission_H
 #define Permission_H
-enum PermissionType {
-	read,
-	modify,
-};
+//enum PermissionType {
+//	read,
+//	modify,
+//};
 
 class Permission{
 public:
