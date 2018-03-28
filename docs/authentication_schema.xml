@@ -47,7 +47,7 @@
 
 <!--For any other Document -->
 <!--Detections_detection1.xml-->
-<Permission name="Detections_detection1.xml">
+<Permission name="Detections_detection1">
 	<owner username="user1">
 		<read>true</read>
 		<modify>true</modify>
@@ -77,7 +77,7 @@
  -->
 
 <!--Deployments_deployment1.xml -->
-<Permission name="Deployments_deployment1.xml">
+<Permission name="Deployments_deployment1">
 	<owner username="user2">
 		<read>true</read>
 		<modify>false</modify>

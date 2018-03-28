@@ -15,12 +15,12 @@ getDocument Detections_detection1
 query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/@username/string()'
 
 <!--get owner read permission -->
-query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/read/string()'
-query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/modify/string()'
+setVariable username "user1"
+query 'collection("Permissions")/Permission[@name=$permission_doc]/owner[@username=$username]/read/string()'
 print
-
 <!--get group read permission -->
-query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name="Public"]/read/string()'
+setVariable groupName "Public"
+query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name=$groupName]/read/string()'
 
 
 query 'for $d in collection("Permissions")
