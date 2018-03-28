@@ -49,21 +49,21 @@
 <!--Detections_detection1.xml-->
 <Permission name="Detections_detection1">
 	<owner username="user1">
-		<read>true</read>
-		<modify>true</modify>
+		<permission type="read">true</permission>
+		<permission type="modify">true</permission>
 	</owner>
 	<groups>
 		<group name="Public">
-			<read>true</read>
-			<modify>false</modify>
+			<permission type="read">true</permission>
+			<permission type="modify">false</permission>
 		</group>
 		<group name="Student">
-			<read>true</read>
-			<modify>false</modify>
+			<permission type="read">true</permission>
+			<permission type="modify">false</permission>
 		</group>
 		<group name="Researcher">
-			<read>true</read>
-			<modify>true</modify>
+			<permission type="read">true</permission>
+			<permission type="modify">true</permission>
 		</group>
 	</groups>
 </Permission>
@@ -79,21 +79,21 @@
 <!--Deployments_deployment1.xml -->
 <Permission name="Deployments_deployment1">
 	<owner username="user2">
-		<read>true</read>
-		<modify>false</modify>
+		<permission type="read">true</permission>
+		<permission type="modify">false</permission>
 	</owner>
 	<groups>
 		<group name="Public">
-			<read>false</read>
-			<modify>false</modify>
+			<permission type="read">false</permission>
+			<permission type="modify">false</permission>
 		</group>
 		<group name="Student">
-			<read>false</read>
-			<modify>false</modify>
+			<permission type="read">false</permission>
+			<permission type="modify">false</permission>
 		</group>
 		<group name="Researcher">
-			<read>true</read>
-			<modify>true</modify>
+			<permission type="read">true</permission>
+			<permission type="modify">true</permission>
 		</group>
 	</groups>
 </Permission>

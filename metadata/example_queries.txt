@@ -16,11 +16,16 @@ query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/@userna
 
 <!--get owner read permission -->
 setVariable username "user1"
-query 'collection("Permissions")/Permission[@name=$permission_doc]/owner[@username=$username]/read/string()'
+setVariable permission_type "read"
+setVariable permission_doc "Detections_detection1"
+
+query 'collection("Permissions")/Permission[@name=$permission_doc]/owner[@username=$username]/permission[@type=$permission_type]/string()'
 print
 <!--get group read permission -->
 setVariable groupName "Public"
-query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name=$groupName]/read/string()'
+query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name=$groupName]/permission[@type=$permission_type]/string()'
+
+
 
 
 query 'for $d in collection("Permissions")
