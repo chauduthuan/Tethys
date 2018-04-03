@@ -1,13 +1,27 @@
 query 'collection("Users")/User'
 print
 
-setVariable username 'user1'
+<!--Get user -->
+setVariable username "user1"
+setVariable password "1111"
+query 'collection("Users")/User[@username=$username and password=$password]'
+query 'for $user in collection("Users")/User[@username=$username]
+where $user/password/string() = $password
+return $user'
+
 <!--Get password -->
 query 'collection("Users")/User[@username=$username]/password/string()'
-print
+
 <!--Get groups -->
 query 'collection("Users")/User[@username=$username]/groups/group/string()'
 
+query 'for $user in collection("Users")/User[@username=$username]
+where $user/password/string() = $password
+return $user/groups/group/string()'
+
+
+<!--Check document exists -->
+query 'if(empty(collection("Permissions")/Permission[@name=$permission_doc])) then ("false") else ("true")'
 
 setVariable permission_doc "Detections_detection1.xml"
 getDocument Detections_detection1
@@ -18,14 +32,29 @@ query 'collection("Permissions")/Permission[@name=$permission_doc]/owner/@userna
 setVariable username "user1"
 setVariable permission_type "read"
 setVariable permission_doc "Detections_detection1"
-
 query 'collection("Permissions")/Permission[@name=$permission_doc]/owner[@username=$username]/permission[@type=$permission_type]/string()'
 print
 <!--get group read permission -->
 setVariable groupName "Public"
+setVariable permission_doc "Detections_detection1"
+query 'for $group in collection("Permissions")/Permission[@name=$permission_doc]/groups/group
+where contains(string-join($groups," "), $group/@name/string())
+return $group/permission[@type=$permission_type]/string()
+'
+
 query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name=$groupName]/permission[@type=$permission_type]/string()'
 
 
+query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name="Public" or @name="Researcher" or @name="Student"]/permission[@type="read"]/string()'
+
+setVariable groups = ("Public","Student")
+query 'collection("Permissions")/Permission[@name=$permission_doc]/groups/group[@name=$groups]/permission[@type="read"]'
+
+query '
+for $g in collection("Permissions")/Permission[@name=$permission_doc]/groups/group
+where contains(string-join($groups," "), $g/@name/string())
+return $g/permission[@type=$permission_type]/string()
+'
 
 
 query 'for $d in collection("Permissions")

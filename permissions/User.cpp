@@ -54,12 +54,10 @@ string User::queryPassword()
 	context.setVariableValue("username", this->username);
 	XmlQueryExpression qe = xmlManager.prepare(query, context);
 	XmlResults results = qe.execute(context,0);
-	cout << "Found " << results.size() << " documents for query: '"<< query << "'" << endl;
 	XmlValue value;
 	while (results.next(value))
 	{
 		pw = value.asString();
-		cout<<"correct password = " << pw << endl;
 	}
 	return pw;
 }
@@ -75,12 +73,10 @@ vector<string> User::queryGroups()
 	context.setVariableValue("username", this->username);
 	XmlQueryExpression qe = xmlManager.prepare(query, context);
 	XmlResults results = qe.execute(context,0);
-	cout << "Found " << results.size() << " documents for query: '"<< query << "'" << endl;
 	XmlValue value;
 	while (results.next(value))
 	{
 		groups.push_back(value.asString());
-		cout<<"group =  " << value.asString() << endl;
 	}
 	return groups;
 }
@@ -90,14 +86,11 @@ bool User::hasPermission(string containerName, string documentName, PermissionTy
 	string permissionContainerName = this->getPermissionsContainerName();
 	string permissionDocumentName = this->getPermissionDocumentName(containerName, documentName);
 	//string permissionDocumentName = "Deployments_deployment1";
-	cout << "Permission Container Name = " << permissionContainerName<< endl;
-	cout << "Permission Document Name =  " << permissionDocumentName << endl;
 	XmlManager xmlManager;
 	XmlContainer permissionsXmlContainer = xmlManager.openContainer(permissionContainerName);
 	XmlDocument permissionXmlDocument = permissionsXmlContainer.getDocument(permissionDocumentName);
 	string content;
 	permissionXmlDocument.getContent(content);
-	cout<<"Permission content = \n" << content << endl;
 	/* for normal document, read permission document and check permission
 	if permission xml not found, return true
 	if user is admin, return true
@@ -178,4 +171,17 @@ string User::getPermissionDocumentName(string containerName, string documentName
 {
 	string docName = containerName + "_" + documentName;
 	return docName;
+};
+
+string User::getPermissionType(PermissionType type)
+{
+	switch(type)
+	{
+		case read:
+			return "read";
+		case modify:
+			return "modify";
+		default:
+			return "read";
+	}
 };

@@ -5,7 +5,7 @@
 #include "dbxml/DbXml.hpp"
 
 //#define DBXML_DIR "C:/Users/thuanPC/Desktop/Tethys/metadata/"
-#define METADATA_PATH "../../Tethys/metadata/"
+#define METADATA_PATH "../../Tethys/metadata/permission/"
 
 #define USERS_CONTAINER_NAME "Users"
 #define ADMINS_CONTAINER_NAME "Admins"
@@ -67,6 +67,7 @@ private:
 	bool isValid;
 	//XmlDocument userXmlDocument;
 	string queryPassword();
+	string getPermissionType(PermissionType type);
 	vector<string> queryGroups();
 	
 	/*XmlManager xmlManager;
