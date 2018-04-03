@@ -4,8 +4,8 @@
 
 #include "dbxml/DbXml.hpp"
 
-//#define DBXML_DIR "C:/Users/thuanPC/Desktop/Tethys/metadata/"
 #define METADATA_PATH "../../Tethys/metadata/permission/"
+//#define METADATA_PATH "C:/Users/tchau/Desktop/Tethys/metadata/permission"
 
 #define USERS_CONTAINER_NAME "Users"
 #define ADMINS_CONTAINER_NAME "Admins"
@@ -61,7 +61,7 @@ public:
 private:
 	string username;
 	string password;
-	string correctPassword;
+	//string correctPassword;
 	vector<string> groups;
 
 	bool isValid;
@@ -70,6 +70,8 @@ private:
 	string getPermissionType(PermissionType type);
 	vector<string> queryGroups();
 	
+	int getArraySize(string *arr[]);
+	XmlResults query(string containerName, string query, string variables[], string values[], int numberOfVariables);
 	/*XmlManager xmlManager;
 	XmlContainer usersXmlContainer;
 	XmlDocument userXmlDocument;*/

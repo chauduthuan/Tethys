@@ -16,30 +16,36 @@ User::User(std::string username, std::string password)
 
 void User::validateUser()
 {
-	try
+	if(!this->isValid)
 	{
-		XmlManager xmlManager;
-		XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
-		XmlDocument userXmlDocument = usersXmlContainer.getDocument(this->username);
-		userXmlDocument.getContent(this->userXmlContent);
-
-		/*
-		querry password , assign to correctPassword, compare password and assign isValid
-		query groups, assign groups
-		*/
-		this->correctPassword = this->queryPassword();
-		if (this->password == this->correctPassword) 
+		try
 		{
-			this->isValid = true;
-			cout << "User valid" <<endl;
-		}
-		this->groups = this->queryGroups();
+			//XmlManager xmlManager;
+			//XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+			//query user to check if user valid
+			this->isValid = this->isUserValid();
 
-	} 
-	catch (XmlException &xe) //document not found => user not exist
-	{
-		this->userXmlContent = "";
-		cout<<"Error"<<endl;
+			//XmlDocument userXmlDocument = usersXmlContainer.getDocument(this->username);
+			//userXmlDocument.getContent(this->userXmlContent);
+
+			/*
+			querry password , assign to correctPassword, compare password and assign isValid
+			query groups, assign groups
+			*/
+			/*this->correctPassword = this->queryPassword();
+			if (this->password == this->correctPassword) 
+			{
+				this->isValid = true;
+				cout << "User valid" <<endl;
+			}
+			this->groups = this->queryGroups();*/
+
+		} 
+		catch (XmlException &xe) //document not found => user not exist
+		{
+			this->userXmlContent = "";
+			cout<<"Error"<<endl;
+		}
 	}
 };
 
@@ -104,6 +110,21 @@ bool User::hasPermission(string containerName, string documentName, PermissionTy
 	return true;
 };
 
+XmlResults User::query(string containerName, string query, string variables[], string values[], int numberOfVariables)
+{
+	XmlManager xmlManager;
+	XmlContainer xmlContainer = xmlManager.openContainer(containerName);
+	XmlQueryContext context = xmlManager.createQueryContext();	
+	context.setVariableValue("containerName", containerName);
+	for (int i = 0; i < numberOfVariables ; i++)
+	{
+		context.setVariableValue(variables[i], values[i]);
+	}
+	XmlQueryExpression qe = xmlManager.prepare(query, context);
+	XmlResults results = qe.execute(context,0);
+	return results;
+};
+
 bool User::isAdmin()
 {
 	return (this->username == ADMIN_USERNAME) && (this->password == ADMIN_PASSWORD);
@@ -111,6 +132,32 @@ bool User::isAdmin()
 
 bool User::isUserValid()
 {
+	if(!this->isValid) //not valid
+	{
+		//Query get user
+		//XmlManager xmlManager;
+		//XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+		//XmlQueryContext context = xmlManager.createQueryContext();
+		//string query ="collection('Users')/User[@username=$username and password=$password]";
+		//context.setVariableValue("username", this->username);
+		//context.setVariableValue("password", this->password);
+		//XmlQueryExpression qe = xmlManager.prepare(query, context);
+		//XmlResults results = qe.execute(context,0);
+		string containerName = this->getUsersContainerName();
+		string query ="collection($containerName)/User[@username=$username and password=$password]";
+		string variables[] = {"username","password"};
+		int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
+		string values[] = {this->username, this->password};
+		XmlResults results = this->query(containerName, query, variables, values, numberOfVariables);
+		if (results.size() == 1)
+		{
+			this->isValid = true;
+		} 
+		else 
+		{
+			this->isValid = false;
+		}
+	}
 	return this->isValid;
 };
 
