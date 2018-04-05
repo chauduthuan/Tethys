@@ -19,27 +19,16 @@ void User::validateUser()
 	if(!this->isValid)
 	{
 		try
-		{
-			//XmlManager xmlManager;
-			//XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+		{	
 			//query user to check if user valid
-			this->isValid = this->isUserValid();
-
-			//XmlDocument userXmlDocument = usersXmlContainer.getDocument(this->username);
-			//userXmlDocument.getContent(this->userXmlContent);
-
-			/*
-			querry password , assign to correctPassword, compare password and assign isValid
-			query groups, assign groups
-			*/
-			/*this->correctPassword = this->queryPassword();
-			if (this->password == this->correctPassword) 
-			{
-				this->isValid = true;
-				cout << "User valid" <<endl;
+			if(this->isUserValid())	//User valid
+			{	
+				cout << this->username <<" is valid" << endl;
+				this->groups = this->queryGroups();
 			}
-			this->groups = this->queryGroups();*/
-
+			else //User is not valid
+			{
+			}
 		} 
 		catch (XmlException &xe) //document not found => user not exist
 		{
@@ -52,14 +41,13 @@ void User::validateUser()
 string User::queryPassword()
 {
 	string pw = "";
-	XmlManager xmlManager;
-	XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+	string containerName = this->getUsersContainerName();
+	string query ="collection($containerName)/User[@username=$username]/password/string()";
+	string variables[] = {"username"};
+	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
+	string values[] = {this->username};
+	XmlResults results = this->query(containerName, query, variables, values, numberOfVariables);
 
-	XmlQueryContext context = xmlManager.createQueryContext();
-	string query ="collection('../../Tethys/metadata/Users')/User[@username=$username]/password/string()";
-	context.setVariableValue("username", this->username);
-	XmlQueryExpression qe = xmlManager.prepare(query, context);
-	XmlResults results = qe.execute(context,0);
 	XmlValue value;
 	while (results.next(value))
 	{
@@ -71,14 +59,13 @@ string User::queryPassword()
 vector<string> User::queryGroups()
 {
 	vector<string> groups;
-	XmlManager xmlManager;
-	XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
+	string containerName = this->getUsersContainerName();
+	string query ="collection($containerName)/User[@username=$username]/groups/group/string()";
+	string variables[] = {"username"};
+	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
+	string values[] = {this->username};
+	XmlResults results = this->query(containerName, query, variables, values, numberOfVariables);
 
-	XmlQueryContext context = xmlManager.createQueryContext();
-	string query ="collection('../../Tethys/metadata/Users')/User[@username=$username]/groups/group/string()";
-	context.setVariableValue("username", this->username);
-	XmlQueryExpression qe = xmlManager.prepare(query, context);
-	XmlResults results = qe.execute(context,0);
 	XmlValue value;
 	while (results.next(value))
 	{
@@ -106,6 +93,7 @@ bool User::hasPermission(string containerName, string documentName, PermissionTy
 		if true, return true
 	return false
 	*/
+	
 
 	return true;
 };
@@ -232,3 +220,13 @@ string User::getPermissionType(PermissionType type)
 			return "read";
 	}
 };
+
+bool User::isTrue(XmlResults results)
+{
+	XmlValue value;
+	while (results.next(value))
+	{
+		if (value.asString() == "true") return true;
+	}
+	return false;
+}
