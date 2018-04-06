@@ -51,7 +51,8 @@ public:
 	bool isUserValid(); //check username and password
 	
 	//bool hasPermission(XmlContainer container, XmlDocument document, PermissionType type);
-	bool hasPermission(string containerName, string documentName, PermissionType type);
+	bool hasPermission(string permissionDocumentName, string documentName, PermissionType type);
+	
 	string getUsersContainerName();
 	string getPermissionsContainerName();
 	string getPermissionDocumentName(string containerName, string documentName);
@@ -61,7 +62,6 @@ public:
 private:
 	string username;
 	string password;
-	//string correctPassword;
 	vector<string> groups;
 
 	bool isValid;
@@ -71,6 +71,9 @@ private:
 	vector<string> queryGroups();
 	
 	int getArraySize(string *arr[]);
+	bool hasOwnerPermission(string permissionContainerName, string permissionDocumentName, PermissionType type);
+	bool hasGroupsPermission(string permissionContainerName, string permissionDocumentName, PermissionType type);
+	bool isTrue(XmlResults results); //iterate through XmlResults and return if any element is true
 	XmlResults query(string containerName, string query, string variables[], string values[], int numberOfVariables);
 	/*XmlManager xmlManager;
 	XmlContainer usersXmlContainer;

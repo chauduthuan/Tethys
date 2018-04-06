@@ -62,10 +62,10 @@ vector<string> User::queryGroups()
 	string containerName = this->getUsersContainerName();
 	string query ="collection($containerName)/User[@username=$username]/groups/group/string()";
 	string variables[] = {"username"};
-	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
 	string values[] = {this->username};
-	XmlResults results = this->query(containerName, query, variables, values, numberOfVariables);
+	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
 
+	XmlResults results = this->query(containerName, query, variables, values, numberOfVariables);
 	XmlValue value;
 	while (results.next(value))
 	{
@@ -76,14 +76,6 @@ vector<string> User::queryGroups()
 
 bool User::hasPermission(string containerName, string documentName, PermissionType type)
 {
-	string permissionContainerName = this->getPermissionsContainerName();
-	string permissionDocumentName = this->getPermissionDocumentName(containerName, documentName);
-	//string permissionDocumentName = "Deployments_deployment1";
-	XmlManager xmlManager;
-	XmlContainer permissionsXmlContainer = xmlManager.openContainer(permissionContainerName);
-	XmlDocument permissionXmlDocument = permissionsXmlContainer.getDocument(permissionDocumentName);
-	string content;
-	permissionXmlDocument.getContent(content);
 	/* for normal document, read permission document and check permission
 	if permission xml not found, return true
 	if user is admin, return true
@@ -94,14 +86,75 @@ bool User::hasPermission(string containerName, string documentName, PermissionTy
 	return false
 	*/
 	
+	string permissionContainerName = this->getPermissionsContainerName();
+	string permissionDocumentName = this->getPermissionDocumentName(containerName, documentName);
+	
+	//check admin permission
+	if (this->isAdmin()) {
+		return true;
+	}
+	//check if permission file exist
+	string query = "if(empty(collection($containerName)/Permission[@name=$permissionDocument])) then ('false') else ('true')";
+	string variables[] = {"permissionDocument"};
+	string values[] = {permissionDocumentName};
+	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
 
-	return true;
+	XmlResults results = this->query(permissionContainerName, query, variables, values, numberOfVariables);
+
+	if (this->isTrue(results)){	//if permission document exist
+		//check owner permission
+		if (this->hasOwnerPermission(permissionContainerName, permissionDocumentName, type)){
+			cout <<"user has owner permission" << endl;		
+			return true;
+		}
+
+		//check group permission
+		if (this->hasGroupsPermission(permissionContainerName, permissionDocumentName, type)){
+			cout <<"user has group permission" << endl;		
+			return true;
+		}
+	}
+	else //if permission document not exist
+	{
+		return false;
+	}
+	return false;
+};
+
+bool User::hasOwnerPermission(string permissionContainerName, string permissionDocumentName, PermissionType type)
+{
+	string query = "collection($containerName)/Permission[@name=$permissionDocument]/owner[@username=$username]/permission[@type=$permissionType]/string()";
+	string permissionType = this->getPermissionType(type);
+	string variables[] = {"permissionDocument","username", "permissionType"};
+	string values[] = {permissionDocumentName, this->getUsername(), permissionType};
+	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
+
+	XmlResults results = this->query(permissionContainerName, query, variables, values, numberOfVariables);
+	return this->isTrue(results); 
+};
+
+bool User::hasGroupsPermission(string permissionContainerName, string permissionDocumentName, PermissionType type)
+{
+	string query = "for $group in collection($containerName)/Permission[@name=$permissionDocument]/groups/group where contains($groupsString, $group/@name/string())return $group/permission[@type=$permissionType]/string()";
+	string permissionType = this->getPermissionType(type);
+	vector<string> groupsList = this->getGroups();
+	string groupsString = "";
+	for (int i = 0; i < groupsList.size(); i++){
+		groupsString += groupsList[i];
+	}
+	string variables[] = {"permissionDocument","groupsString", "permissionType"};
+	string values[] = {permissionDocumentName, groupsString, permissionType};
+	int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
+
+	XmlResults results = this->query(permissionContainerName, query, variables, values, numberOfVariables);
+	return this->isTrue(results); 
 };
 
 XmlResults User::query(string containerName, string query, string variables[], string values[], int numberOfVariables)
 {
 	XmlManager xmlManager;
 	XmlContainer xmlContainer = xmlManager.openContainer(containerName);
+
 	XmlQueryContext context = xmlManager.createQueryContext();	
 	context.setVariableValue("containerName", containerName);
 	for (int i = 0; i < numberOfVariables ; i++)
@@ -122,38 +175,23 @@ bool User::isUserValid()
 {
 	if(!this->isValid) //not valid
 	{
-		//Query get user
-		//XmlManager xmlManager;
-		//XmlContainer usersXmlContainer = xmlManager.openContainer(this->getUsersContainerName());
-		//XmlQueryContext context = xmlManager.createQueryContext();
-		//string query ="collection('Users')/User[@username=$username and password=$password]";
-		//context.setVariableValue("username", this->username);
-		//context.setVariableValue("password", this->password);
-		//XmlQueryExpression qe = xmlManager.prepare(query, context);
-		//XmlResults results = qe.execute(context,0);
 		string containerName = this->getUsersContainerName();
 		string query ="collection($containerName)/User[@username=$username and password=$password]";
 		string variables[] = {"username","password"};
 		int numberOfVariables = sizeof(variables)/sizeof(variables[0]) ;
 		string values[] = {this->username, this->password};
 		XmlResults results = this->query(containerName, query, variables, values, numberOfVariables);
-		if (results.size() == 1)
+		if (results.size() == 1) //user exists
 		{
 			this->isValid = true;
 		} 
-		else 
+		else //user not exist
 		{
 			this->isValid = false;
 		}
 	}
 	return this->isValid;
 };
-
-//bool User::userExist(string username)
-//{
-//
-//	return false;
-//};
 
 void User::setUsername(string username)
 {
@@ -229,4 +267,4 @@ bool User::isTrue(XmlResults results)
 		if (value.asString() == "true") return true;
 	}
 	return false;
-}
+};

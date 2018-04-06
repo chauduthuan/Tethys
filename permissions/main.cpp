@@ -11,22 +11,31 @@ using namespace DbXml;
 int main(int argc, char **argv)
 {	
 	User user("user1","1111");
+	//User user("admin","asdf");
+	//vector<string> groups = user.getGroups();
+	//for(vector<string>::iterator it = groups.begin(); it != groups.end(); ++it) {
+	//	cout << *it << endl;
+	//}
+
 	/*user.setUsername("user1");
 	user.setPassword("1111");
 	user.validateUser();*/
-	cout<< user.getUsername() <<endl;
-	cout<< "Users Container path = " << user.getUsersContainerName() <<endl;
-	string xmlString = user.getUserXmlContent();
-	cout <<xmlString<<endl;
+	//cout<< user.getUsername() <<endl;
+	//cout<< "Users Container path = " << user.getUsersContainerName() <<endl;
+	//string xmlString = user.getUserXmlContent();
+	//cout <<xmlString<<endl;
 	
 	/*XmlManager xmlManager;
 	XmlContainer xmlContainer = xmlManager.openContainer("../../Tethys/metadata/Deployments");
 	XmlDocument xmlDocument = xmlContainer.getDocument("deployment1");
 	*/
 
-	string containerName = "Deployments";
-	string documentName = "deployment1";
-	PermissionType type = read;
+	//string containerName = "Detections";
+	//string documentName = "detection1";
+
+	string containerName = "Detections";
+	string documentName = "detection1";
+	PermissionType type = modify;
 	bool permission = user.hasPermission(containerName, documentName, type);
 	if (permission==true) cout << "read = true" << endl;
 	else cout << "read = false" << endl;
