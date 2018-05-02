@@ -76,13 +76,11 @@ vector<string> User::queryGroups()
 
 bool User::hasPermission(string containerName, string documentName, PermissionType type)
 {
-	/* for normal document, read permission document and check permission
-	if permission xml not found, return true
+	/* 
 	if user is admin, return true
-	if user is owner, return permission.xml/owner/read
-	iterate through each group of the user, for each group name
-		check permission.xml/groups/group[@name="group_name"]/read
-		if true, return true
+	if permission document not found, return false
+	query owner permission, return true if has owner permission
+	query group permission, return true if has group permission
 	return false
 	*/
 	
@@ -113,10 +111,6 @@ bool User::hasPermission(string containerName, string documentName, PermissionTy
 			cout <<"user has group permission" << endl;		
 			return true;
 		}
-	}
-	else //if permission document not exist
-	{
-		return false;
 	}
 	return false;
 };

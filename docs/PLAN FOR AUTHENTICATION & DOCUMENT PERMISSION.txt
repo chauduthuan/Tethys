@@ -1,0 +1,84 @@
+PLAN FOR AUTHENTICATION & DOCUMENT PERMISSION
+
+-----AUTHENTICATION-----
+FRONT-END
+	pages for log in + registration
+
+BACK-END
+	from python REST Resources.py
+		create new class for registration (define GET, PUT, POST)
+		create new class for log in (define GET, PUT, POST)
+		POST method will send an pre-defined xquery to XQuery for creating or getting user
+
+QUERY-REFINER PART
+	modify schema of tethys
+	inject meta data into each document about permission
+	in where clause, specify rules depending who is the user 
+
+
+-----PERMISSION-----
+//modifying source code from dbxml seems impossible. Too complicated because of dbxml, xqilla and xcerer 
+BACK-END
+	from python REST.Resources.Xquery
+		modify def POST function to inject user's information (username) to somewhere (need to be defined)
+			1) XmlQueryContext
+			or 2) directly to query
+
+
+	from dbxml source code
+		XmlManager.cpp
+			XmlResults XmlManager::query(const std::string &xquery,
+			     XmlQueryContext &context, u_int32_t flags)
+				extract user's information
+				assign user to somewhere(don't know yet)
+					1) make an User object in XmlManager if each user has his own XmlManager instance. Right now there is only 1 manager instance which handles all requests on server
+					or 2) need a way to pass it to OperationContext or XmlDocument or inside Container
+						XmlQueryContext => QueryContext => ...
+
+		Container.cpp
+			Container::getDocument(OperationContext &context, const DocID &did, XmlDocument &document, u_int32_t flags) const
+		       from here execute xquery to check permission for user
+
+
+-----CALLBACK when execute query from dbxml (reading query)-----
+XmlManager.cpp
+	XmlQueryExpression XmlManager::prepare(const std::string &xquery, XmlQueryContext &context)
+
+***QueryExpression.cpp***
+	QueryExpression::QueryExpression(const std::string &query, XmlQueryContext &context, Transaction *txn, bool debug)
+
+
+XQilla.cpp
+	DynamicContext *XQilla::createContext(Language language, XQillaConfiguration *conf,
+                                      MemoryManager *memMgr)
+	XQQuery* XQilla::parse(const XMLCh* inputQuery, DynamicContext* context,
+                       const XMLCh* queryFile, unsigned int flags,
+                       MemoryManager *memMgr)
+
+	void XQQuery::staticResolution()
+
+
+Result.cpp
+	LazyDIResults::LazyDIResults(QueryContext *context, Value *contextItem, QueryExpression &expr, Transaction *txn, u_int32_t flags)
+		//This is where dbxml execute query
+
+	ValueResults::ValueResults(Results *resultsToAdopt, XmlManager &mgr, Transaction *txn)
+
+	void ValueResults::init(XmlResults &results)
+		there is a while loop to loop through all results value and put it into a vector
+
+
+XQQuery
+	Result XQQuery::execute(DynamicContext* context) const
+
+	XQQuery::QueryResult::QueryResult(const XQQuery *query)
+	  : ResultImpl(query->getQueryBody()),
+	    _query(query)
+
+
+Container.cpp
+	int Container::getDocument(OperationContext &context, const DocID &did, XmlDocument &document, u_int32_t flags) const
+		if return only has 1 value, it goes to this once
+
+
+-----CALLBACK when execute query from program-----

@@ -151,3 +151,51 @@
 		<Version>1.0</Version>
 	</Algorithm>
 </Detection>
+
+
+<!-- METADATA for permission on each document to specify who can read-->
+<PermissionMetadata>
+	<Read>
+		<owner>UserASDF</owner>
+		<group>Public</group>
+		<group>Researcher</group>
+	</Read>
+	<Modify>
+		<owner>UserASDF</owner>
+		<group>Public</group>
+		<group>Researcher</group>
+	</Modify>
+</PermissionMetadata>
+<!-- example -->
+<Detection name="detection1">
+	<DataSource>
+		<Project>SOCAL</Project>
+		<Deployment>38</Deployment>
+		<Site>M</Site>
+	</DataSource>
+	<Algorithm>
+		<Method>Energy Detector</Method>
+		<Software>finDetector</Software>
+		<Version>2.0</Version>
+	</Algorithm>
+
+	<PermissionMetadata>
+		<owner>UserASDF</owner>
+		<Read>
+			<group>Public</group>
+			<group>Researcher</group>
+		</Read>
+		<Modify>			
+			<group>Public</group>
+			<group>Researcher</group>
+		</Modify>
+	</PermissionMetadata>
+</Detection>
+<!--Example query for user1, with researcher and public group
+for $d in collection("Detections")/Detection
+where ...
+and ($d/PermissionMetadata/owner = "user1"
+or $d/PermissionMetadata/Read/group = "researcher"
+or $d/PermissionMetadata/Read/group = "public")
+return $d
+-->

@@ -1,0 +1,65 @@
+-----package-----
+dbxmlInterface - Interface to Berkeley dbXML
+	db.py
+		use bsddb3.db and dbxml
+		serve as driver/interface to connect to database and commit transaction
+
+dataImport - Routines for generating XML from spreadsheets, text files, databases, or anything that can be read by ODBC.
+
+mediators - Routines for accessing web services as if they were part of Tethys
+
+REST - RESTful interface to the cherrypy web server
+	Serve.py
+		Server - to change/make configuration to server
+			dbxmlServer - instance of Berkeley DBXML interface
+			port, ssl
+			set configuration to cherrypy
+			
+			root = Root(dbxmlServer)
+			root.XQuery = REST.Resources.XQuery(dbxmlServer)
+			app = cherrypy.tree.mount(root, '/', REST.config)
+
+	Monitors.py - not important
+
+	Resources.py
+		class XQuery
+			def POST(self, *args, **kwargs):
+    		    "Run an XQuery stored in the XQuery parameter"
+				self.dbserver = dbserver
+		        self.xquery = dbserver.getMethods().query  //this xquery is XmlMethods.query(queryStr) from dbxmlInterface
+				
+				result = self.xquery(query)
+
+		class Attachment
+
+		class Collection
+
+		class Tethys
+
+
+XML - Routines to log/generate/transform XML
+
+
+client-python - provide low level access/write xquery to tethys
+
+
+
+-----source code-----
+dbXMLServer.py - start up server
+
+
+
+
+
+
+
+
+
+dbxmlInterface - Interface to Berkeley dbXML
+dataImport - Routines for generating XML from spreadsheets, text files, databases, or anything that can be read by ODBC.
+mediators - Routines for accessing web services as if they were part of Tethys
+REST - RESTful interface to the cherrypy web server
+XML - Routines to log/generate/transform XML
+sos - deprecated
+xmlrpc - deprecated
+source-docs - deprecated
