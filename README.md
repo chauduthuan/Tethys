@@ -16,3 +16,5 @@ Steps:
     "C:\Users\tchau\Desktop\dbxml-2.5.16\lib"
   project -> properties -> Linker -> Input -> additional dependencies
     dbxml.lib libdb48d.lib libdbxml25d.lib xerces-c_3D.lib xqilla22d.lib
+
+NOT WORKING AT THIS TIME
